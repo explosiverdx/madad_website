@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Our Doctors - Meditech Clinic</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/medi_tach.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Meditech Clinic</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="doctors.html">Doctors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin-login.html">Admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Our Doctors</h1>
+
+        <div class="row" id="doctorsContainer">
+            <!-- Doctors will be loaded here -->
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function loadDoctors() {
+            try {
+                const response = await fetch('http://localhost:5000/api/doctors');
+                if (response.ok) {
+                    const doctors = await response.json();
+                    const container = document.getElementById('doctorsContainer');
+                    container.innerHTML = '';
+
+                    if (doctors.length === 0) {
+                        container.innerHTML = '<div class="col-12 text-center"><p>No doctors available at the moment.</p></div>';
+                    } else {
+                        doctors.forEach(doctor => {
+                            const doctorCard = `
+                                <div class="col-md-4 mb-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${doctor.name}</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">${doctor.specialty}</h6>
+                                            <p class="card-text">${doctor.bio || 'No bio available.'}</p>
+                                            <p class="card-text"><small class="text-muted">Email: ${doctor.email || 'N/A'}</small></p>
+                                            <p class="card-text"><small class="text-muted">Phone: ${doctor.phone || 'N/A'}</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            container.innerHTML += doctorCard;
+                        });
+                    }
+                } else {
+                    console.error('Failed to load doctors');
+                }
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+            }
+        }
+
+        loadDoctors();
+    </script>
+</body>
+</html>

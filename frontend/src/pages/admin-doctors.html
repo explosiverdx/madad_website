@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Manage Doctors - Meditech Clinic</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/medi_tach.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Meditech Admin</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="admin-dashboard.html">Dashboard</a>
+                <a class="nav-link" href="admin-users.html">Users</a>
+                <a class="nav-link" href="admin-bookings.html">Bookings</a>
+                <a class="nav-link" href="admin-payments.html">Payments</a>
+                <a class="nav-link" href="admin-posts.html">Posts</a>
+                <a class="nav-link" href="admin-doctors.html">Doctors</a>
+                <a class="nav-link" href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Manage Doctors</h2>
+
+        <div class="mb-3">
+            <button class="btn btn-primary" onclick="showAddDoctorForm()">Add New Doctor</button>
+        </div>
+
+        <div id="doctorFormContainer" style="display:none;">
+            <form id="doctorForm">
+                <input type="hidden" id="doctorId" />
+                <div class="mb-3">
+                    <label for="doctorName" class="form-label">Name</label>
+                    <input type="text" id="doctorName" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label for="doctorSpecialty" class="form-label">Specialty</label>
+                    <input type="text" id="doctorSpecialty" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label for="doctorEmail" class="form-label">Email</label>
+                    <input type="email" id="doctorEmail" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="doctorPhone" class="form-label">Phone</label>
+                    <input type="tel" id="doctorPhone" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="doctorBio" class="form-label">Bio</label>
+                    <textarea id="doctorBio" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="hideDoctorForm()">Cancel</button>
+            </form>
+        </div>
+
+        <table class="table table-striped" id="doctorsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Specialty</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="doctorsBody">
+                <tr><td colspan="7" class="text-center">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+            window.location.href = 'admin-login.html';
+        }
+
+        const doctorFormContainer = document.getElementById('doctorFormContainer');
+        const doctorForm = document.getElementById('doctorForm');
+        const doctorsBody = document.getElementById('doctorsBody');
+
+        function showAddDoctorForm() {
+            doctorForm.reset();
+            document.getElementById('doctorId').value = '';
+            doctorFormContainer.style.display = 'block';
+        }
+
+        function hideDoctorForm() {
+            doctorFormContainer.style.display = 'none';
+        }
+
+        async function loadDoctors() {
+            try {
+                const response = await fetch('http://localhost:5000/api/admin/doctors', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const doctors = await response.json();
+                    doctorsBody.innerHTML = '';
+                    if (doctors.length === 0) {
+                        doctorsBody.innerHTML = '<tr><td colspan="7" class="text-center">No doctors found</td></tr>';
+                    } else {
+                        doctors.forEach(doctor => {
+                            const row = `
+                                <tr>
+                                    <td>${doctor.id}</td>
+                                    <td>${doctor.name}</td>
+                                    <td>${doctor.specialty}</td>
+                                    <td>${doctor.email || ''}</td>
+                                    <td>${doctor.phone || ''}</td>
+                                    <td>${new Date(doctor.createdAt).toLocaleDateString()}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editDoctor(${doctor.id})">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteDoctor(${doctor.id})">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                            doctorsBody.innerHTML += row;
+                        });
+                    }
+                } else {
+                    window.location.href = 'admin-login.html';
+                }
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+            }
+        }
+
+        async function editDoctor(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/doctors`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const doctors = await response.json();
+                    const doctor = doctors.find(d => d.id === id);
+                    if (doctor) {
+                        document.getElementById('doctorId').value = doctor.id;
+                        document.getElementById('doctorName').value = doctor.name;
+                        document.getElementById('doctorSpecialty').value = doctor.specialty;
+                        document.getElementById('doctorEmail').value = doctor.email || '';
+                        document.getElementById('doctorPhone').value = doctor.phone || '';
+                        document.getElementById('doctorBio').value = doctor.bio || '';
+                        doctorFormContainer.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching doctor:', error);
+            }
+        }
+
+        doctorForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('doctorId').value;
+            const name = document.getElementById('doctorName').value;
+            const specialty = document.getElementById('doctorSpecialty').value;
+            const email = document.getElementById('doctorEmail').value;
+            const phone = document.getElementById('doctorPhone').value;
+            const bio = document.getElementById('doctorBio').value;
+
+            const doctorData = { name, specialty, email, phone, bio };
+
+            try {
+                let response;
+                if (id) {
+                    response = await fetch(`http://localhost:5000/api/admin/doctors/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(doctorData)
+                    });
+                } else {
+                    response = await fetch('http://localhost:5000/api/admin/doctors', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(doctorData)
+                    });
+                }
+
+                if (response.ok) {
+                    hideDoctorForm();
+                    loadDoctors();
+                } else {
+                    alert('Failed to save doctor');
+                }
+            } catch (error) {
+                console.error('Error saving doctor:', error);
+            }
+        });
+
+        async function deleteDoctor(id) {
+            if (confirm('Are you sure you want to delete this doctor?')) {
+                try {
+                    const response = await fetch(`http://localhost:5000/api/admin/doctors/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        loadDoctors();
+                    } else {
+                        alert('Failed to delete doctor');
+                    }
+                } catch (error) {
+                    console.error('Error deleting doctor:', error);
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'admin-login.html';
+        }
+
+        loadDoctors();
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+- [ ] Add backend dependencies to frontend/package.json
+- [ ] Create frontend/api/ directory
+- [ ] Create vercel.json in frontend/
+- [ ] Split backend routes into serverless functions in api/
+- [ ] Update API URLs in frontend code to use /api/
+- [ ] Test build and deployment

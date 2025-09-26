@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard - Meditech Clinic</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/admin-panel.css" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded-3 px-3">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <i class="bi bi-bar-chart-fill me-2" style="font-size: 1.5rem;"></i>
+        Plusadmin
+        <!-- <small class="ms-2" style="font-size: 0.75rem;">Responsive Dashboard</small> -->
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="adminNavbar">
+        <form class="d-flex ms-auto my-2 my-lg-0" role="search" style="max-width: 300px;">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+        </form>
+        <ul class="navbar-nav ms-3 align-items-center">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="doctorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Doctor
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="doctorDropdown">
+              <li><a class="dropdown-item" href="#">Add Doctor</a></li>
+              <li><a class="dropdown-item" href="#">Manage Doctors</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="patientDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Patient
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="patientDropdown">
+              <li><a class="dropdown-item" href="#">Add Patient</a></li>
+              <li><a class="dropdown-item" href="#">Manage Patients</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="departmentDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Department
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
+              <li><a class="dropdown-item" href="#">Add Department</a></li>
+              <li><a class="dropdown-item" href="#">Manage Departments</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="scheduleDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Schedule
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
+              <li><a class="dropdown-item" href="#">Add Schedule</a></li>
+              <li><a class="dropdown-item" href="#">Manage Schedules</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="appointmentDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Appointment
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="appointmentDropdown">
+              <li><a class="dropdown-item" href="#">Add Appointment</a></li>
+              <li><a class="dropdown-item" href="#">Manage Appointments</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Report
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="reportDropdown">
+              <li><a class="dropdown-item" href="#">Generate Report</a></li>
+              <li><a class="dropdown-item" href="#">View Reports</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-danger text-white px-3 ms-2" href="#">Online Booking</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              English
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+              <li><a class="dropdown-item" href="#">English</a></li>
+              <li><a class="dropdown-item" href="#">Spanish</a></li>
+              <li><a class="dropdown-item" href="#">French</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Home">
+              <i class="bi bi-house-door-fill"></i>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Dr. Nwoye" class="rounded-circle" width="30" height="30" />
+              <span class="ms-2">Dr. Nwoye</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="#">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <div class="p-3 bg-primary text-white rounded">
+          <h4>How are you feeling today?</h4>
+          <p>Get unlimited doctor consultations and much more with Meditech Admin</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3 bg-white rounded shadow-sm text-center">
+          <h5>Open Hours</h5>
+          <p>Monday-Saturday: 10:00 - 24:00</p>
+          <p>Sunday: 12:00 - 18:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row text-center mb-4">
+      <div class="col-md-2">
+        <div class="stats-card">
+          <i class="bi bi-person-badge" style="font-size: 2rem; color: #007bff;"></i>
+          <h3 id="doctorsCount">3,973</h3>
+          <p>Doctors</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <i class="bi bi-people" style="font-size: 2rem; color: #28a745;"></i>
+          <h3 id="patientsCount">4,353</h3>
+          <p>Patients</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <i class="bi bi-person-heart" style="font-size: 2rem; color: #dc3545;"></i>
+          <h3 id="nursesCount">2,354</h3>
+          <p>Nurses</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <i class="bi bi-capsule" style="font-size: 2rem; color: #ffc107;"></i>
+          <h3 id="pharmacistsCount">12</h3>
+          <p>Pharmacists</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <i class="bi bi-calendar-event" style="font-size: 2rem; color: #17a2b8;"></i>
+          <h3 id="eventsCount">29</h3>
+          <p>New Events</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stats-card">
+          <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #6c757d;"></i>
+          <h3 id="reportsCount">46</h3>
+          <p>Reports</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 doctor-list">
+        <h5>Doctors List</h5>
+        <div class="doctor-item">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Dr. Freddy" />
+          <div class="info">
+            <strong>Dr. Freddy</strong>
+            <span>Gynaecology</span>
+          </div>
+        </div>
+        <div class="doctor-item">
+          <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Dr. Kita Chihoko" />
+          <div class="info">
+            <strong>Dr. Kita Chihoko</strong>
+            <span>Cardiology</span>
+          </div>
+        </div>
+        <div class="doctor-item">
+          <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Dr. Nwoye" />
+          <div class="info">
+            <strong>Dr. Nwoye</strong>
+            <span>Cardiology</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <h5>Recent Appointments</h5>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Date</th>
+              <th>Timing</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Nik Jordan</td>
+              <td>Alfie Wood</td>
+              <td>12 Sep 2020</td>
+              <td>10:02PM</td>
+              <td>087-288-7626</td>
+            </tr>
+            <tr>
+              <td>Lily Wozniak</td>
+              <td>Dr. Kita Chihoko</td>
+              <td>14 Mar 2020</td>
+              <td>05:11PM</td>
+              <td>958-984-6484</td>
+            </tr>
+            <tr>
+              <td>Samuel Path</td>
+              <td>Dr. Nwoye</td>
+              <td>26 Feb 2020</td>
+              <td>08:05PM</td>
+              <td>782-097-9355</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Example admin token - replace with real token after login
+    const adminToken = 'admin-token-123';
+
+    async function fetchDashboardData() {
+      try {
+        const response = await fetch('/api/admin/dashboard', {
+          headers: {
+            'Authorization': `Bearer ${adminToken}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch dashboard data');
+        }
+        const data = await response.json();
+
+        // Update stats cards
+        document.getElementById('doctorsCount').textContent = data.totalDoctors || '0';
+        document.getElementById('patientsCount').textContent = data.totalUsers || '0';
+        // Nurses, Pharmacists, Events, Reports can be added similarly if backend provides
+
+        // Update recent appointments table
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = '';
+        data.recentBookings.forEach(booking => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${booking.name || ''}</td>
+            <td>${booking.doctorName || 'N/A'}</td>
+            <td>${new Date(booking.date).toLocaleDateString()}</td>
+            <td>${new Date(booking.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+            <td>${booking.phone || ''}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchDashboardData();
+  </script>
+</body>
+</html>

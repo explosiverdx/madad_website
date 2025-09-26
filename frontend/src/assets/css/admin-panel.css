@@ -1,0 +1,96 @@
+/* Admin Panel Custom Styles */
+
+body.admin-panel {
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-navbar {
+  background-color: #0047ab;
+}
+
+.admin-navbar .navbar-brand,
+.admin-navbar .nav-link,
+.admin-navbar .navbar-text {
+  color: white !important;
+}
+
+.stats-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stats-card h3 {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.stats-card p {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.table thead {
+  background-color: #0047ab;
+  color: white;
+}
+
+.table tbody tr:hover {
+  background-color: #e9f0ff;
+}
+
+.doctor-list {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.doctor-list h5 {
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.doctor-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.doctor-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.doctor-item .info {
+  font-size: 0.9rem;
+}
+
+.doctor-item .info strong {
+  display: block;
+  font-weight: 600;
+}
+
+/* Navbar enhancements for admin panel */
+
+.navbar.admin-navbar {
+  background-color: #0047ab;
+}
+
+.navbar.admin-navbar .navbar-brand,
+.navbar.admin-navbar .nav-link,
+.navbar.admin-navbar .navbar-text {
+  color: white !important;
+}
+
+/* Additional styling for badges, buttons, dropdowns can be added here */

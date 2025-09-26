@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Manage Payments - Meditech Clinic</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/medi_tach.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Meditech Admin</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="admin-dashboard.html">Dashboard</a>
+                <a class="nav-link" href="admin-users.html">Users</a>
+                <a class="nav-link" href="admin-bookings.html">Bookings</a>
+                <a class="nav-link" href="admin-payments.html">Payments</a>
+                <a class="nav-link" href="admin-posts.html">Posts</a>
+                <a class="nav-link" href="admin-doctors.html">Doctors</a>
+                <a class="nav-link" href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Manage Payments</h2>
+
+        <div class="mb-3">
+            <button class="btn btn-primary" onclick="showAddPaymentForm()">Add New Payment</button>
+        </div>
+
+        <div id="paymentFormContainer" style="display:none;">
+            <form id="paymentForm">
+                <input type="hidden" id="paymentId" />
+                <div class="mb-3">
+                    <label for="paymentUser" class="form-label">User</label>
+                    <input type="text" id="paymentUser" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label for="paymentAmount" class="form-label">Amount</label>
+                    <input type="number" id="paymentAmount" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label for="paymentDate" class="form-label">Date</label>
+                    <input type="date" id="paymentDate" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="hidePaymentForm()">Cancel</button>
+            </form>
+        </div>
+
+        <table class="table table-striped" id="paymentsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="paymentsBody">
+                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+            window.location.href = 'admin-login.html';
+        }
+
+        const paymentFormContainer = document.getElementById('paymentFormContainer');
+        const paymentForm = document.getElementById('paymentForm');
+        const paymentsBody = document.getElementById('paymentsBody');
+
+        function showAddPaymentForm() {
+            paymentForm.reset();
+            document.getElementById('paymentId').value = '';
+            paymentFormContainer.style.display = 'block';
+        }
+
+        function hidePaymentForm() {
+            paymentFormContainer.style.display = 'none';
+        }
+
+        async function loadPayments() {
+            try {
+                const response = await fetch('http://localhost:5000/api/admin/payments', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const payments = await response.json();
+                    paymentsBody.innerHTML = '';
+                    if (payments.length === 0) {
+                        paymentsBody.innerHTML = '<tr><td colspan="6" class="text-center">No payments found</td></tr>';
+                    } else {
+                        payments.forEach(payment => {
+                            const row = `
+                                <tr>
+                                    <td>${payment.id}</td>
+                                    <td>${payment.user || ''}</td>
+                                    <td>${payment.amount}</td>
+                                    <td>${payment.date}</td>
+                                    <td>${new Date(payment.createdAt).toLocaleDateString()}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="editPayment(${payment.id})">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="deletePayment(${payment.id})">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                            paymentsBody.innerHTML += row;
+                        });
+                    }
+                } else {
+                    window.location.href = 'admin-login.html';
+                }
+            } catch (error) {
+                console.error('Error loading payments:', error);
+            }
+        }
+
+        async function editPayment(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/payments`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const payments = await response.json();
+                    const payment = payments.find(p => p.id === id);
+                    if (payment) {
+                        document.getElementById('paymentId').value = payment.id;
+                        document.getElementById('paymentUser').value = payment.user || '';
+                        document.getElementById('paymentAmount').value = payment.amount;
+                        document.getElementById('paymentDate').value = payment.date;
+                        paymentFormContainer.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching payment:', error);
+            }
+        }
+
+        paymentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('paymentId').value;
+            const user = document.getElementById('paymentUser').value;
+            const amount = parseFloat(document.getElementById('paymentAmount').value);
+            const date = document.getElementById('paymentDate').value;
+
+            const paymentData = { user, amount, date };
+
+            try {
+                let response;
+                if (id) {
+                    response = await fetch(`http://localhost:5000/api/admin/payments/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(paymentData)
+                    });
+                } else {
+                    response = await fetch('http://localhost:5000/api/admin/payments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(paymentData)
+                    });
+                }
+
+                if (response.ok) {
+                    hidePaymentForm();
+                    loadPayments();
+                } else {
+                    alert('Failed to save payment');
+                }
+            } catch (error) {
+                console.error('Error saving payment:', error);
+            }
+        });
+
+        async function deletePayment(id) {
+            if (confirm('Are you sure you want to delete this payment?')) {
+                try {
+                    const response = await fetch(`http://localhost:5000/api/admin/payments/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        loadPayments();
+                    } else {
+                        alert('Failed to delete payment');
+                    }
+                } catch (error) {
+                    console.error('Error deleting payment:', error);
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'admin-login.html';
+        }
+
+        loadPayments();
+    </script>
+</body>
+</html>
